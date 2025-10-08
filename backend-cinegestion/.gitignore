@@ -1,0 +1,75 @@
+# ============================================================
+# Node.js y dependencias
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.DS_Store
+
+# ============================================================
+# Entornos y configuración sensible
+# ============================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Solo mantén el ejemplo de variables
+!.env.example
+
+# ============================================================
+# Logs y cachés
+# ============================================================
+logs/
+*.log
+coverage/
+.cache/
+.tmp/
+dist/
+build/
+
+# ============================================================
+# Archivos del sistema / IDE
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# ============================================================
+# Base de datos y dumps
+# ============================================================
+*.sql~
+*.dump
+*.backup
+*.tar
+*.db
+*.sqlite
+/mnt/data/
+
+# ============================================================
+# Test / Sonar / Reports
+# ============================================================
+/coverage
+/sonar-report
+lcov.info
+
+# ============================================================
+# Docker
+# ============================================================
+/docker-data/
+**/docker-compose.override.yml
+**/docker-compose.dev.yml
+
+# ============================================================
+# CI/CD
+# ============================================================
+/.github/workflows/*.tmp
+/.sonar/
+.sonarcloud.properties
