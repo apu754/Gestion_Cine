@@ -1,6 +1,6 @@
 // src/modules/auth/jwt.js
 import jwt from 'jsonwebtoken';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 export function signFor(user) {
   const jti = randomUUID();

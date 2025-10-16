@@ -8,12 +8,39 @@ import jwt from "jsonwebtoken";
 export async function postRegister( req, res, next ) {
     try {
         const { error, value } = registerSchema.validate(req.body, { abortEarly: false });
+        
         if( error ) return res.status(400).json({ error: "validation error", details: error.details.map(e => e.message) });
         const out = await service.register(value);
         return res.status(201).json({ message: 'Usuario registrado correctamente', user: out });
     } catch (err) {
         next(err);
     }
+}
+
+//Verifica el email del usuario /verify
+
+export async function postVerify(req, res, next){
+  try {
+    const { email, code } = req.body;
+    if(!email || !code) return res.status(400).json({ error: "Faltan email y/o código de verificación" });
+    const out = await service.verifyEmail({ email, code });
+    return res.status(200).json({ message: 'Email verificado correctamente', ...out });
+  } catch (err) {
+    next(err);
+  }
+}
+
+//Reenvia el codigo de verificacion al email del usuario /resend
+
+export async function postResend(req , res, next){
+  try {
+    const { email } = req.body;
+    if(!email) return res.status(400).json({ error: "Falta email" });
+    const out = await service.resendVerificationCode({ email });
+    return res.status(200).json({ message: 'Código de verificación reenviado', ...out });
+  } catch (err) {
+    next(err);
+  }
 }
 
 //Inicia sesion un usuario existente /login
@@ -40,7 +67,7 @@ export async function postLogin( req, res, next ) {
 export async function postLogout(req, res) {
   try {
     const auth = req.get('authorization') || '';
-    const m = auth.match(/^Bearer\s+(.+)$/i);
+    const m = auth.match(/^Bearer\s+([A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+)$/);
     if (!m) return res.status(400).json({ error: 'TOKEN_MISSING' });
 
     const token = m[1];
@@ -82,7 +109,7 @@ export async function getMe(req, res, next) {
 export async function postLogoutAll(req, res) {
   try {
     const auth = req.get('authorization') || '';
-    const m = auth.match(/^Bearer\s+(.+)$/i);
+    const m = auth.match(/^Bearer\s+([A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+)$/);
     if (!m) return res.status(400).json({ error: 'TOKEN_MISSING' });
 
     const token = m[1];

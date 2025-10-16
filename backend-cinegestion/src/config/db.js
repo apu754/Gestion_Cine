@@ -1,5 +1,6 @@
 // src/config/db.js
 import pg from 'pg';
+import format from 'pg-format';
 import 'dotenv/config';
 
 const { Pool } = pg;
@@ -10,18 +11,25 @@ const pool = new Pool({
   database: process.env.PGDATABASE || 'postgres',
   user: process.env.PGUSER || 'postgres',
   password: process.env.PGPASSWORD || '',
-  // ssl: { rejectUnauthorized: false } // <- si usas cloud que exige SSL
+  // ssl: { rejectUnauthorized: false }
 });
 
-// fija el search_path en cada conexión al schema configurado
 const schema = process.env.PGSCHEMA || 'public';
+
+// Maneja errores a nivel de pool (buena práctica)
+pool.on('error', (err) => {
+  console.error('PG pool error:', err);
+});
+
+// Fija el search_path escapando el identificador
 pool.on('connect', (client) => {
-  client.query(`SET search_path TO ${schema}, public`);
+  const sql = format('SET search_path TO %I, public', schema); // %I = identificador
+  client.query(sql);
 });
 
 export async function query(text, params) {
-  const res = await pool.query(text, params);
-  return res;
+  // Usa parámetros para VALORES siempre
+  return pool.query(text, params);
 }
 
 export { pool, schema };

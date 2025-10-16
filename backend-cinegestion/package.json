@@ -1,14 +1,15 @@
 {
   "name": "backend-cinegestion",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend del sistema CineGestión con pruebas unitarias, funcionales y cobertura para SonarQube",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
     "dev": "node --watch src/server.js",
     "test": "cross-env NODE_ENV=test PGSCHEMA=cinegestion TEST_LOAD_SCHEMA=0 NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
     "test:int": "cross-env NODE_ENV=test PGSCHEMA=cinegestion TEST_LOAD_SCHEMA=1 NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
-    "test:watch": "cross-env NODE_ENV=test jest --watchAll"
+    "test:watch": "cross-env NODE_ENV=test jest --watchAll",
+    "test:coverage": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --runInBand"
   },
   "keywords": [],
   "author": "",
@@ -18,10 +19,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.1.0",
     "helmet": "^7.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.16.3"
+    "nodemailer": "^7.0.9",
+    "pg": "^8.16.3",
+    "pg-format": "^1.0.4"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",

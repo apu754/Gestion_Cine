@@ -6,7 +6,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-package-lock.json
 .DS_Store
 
 # ============================================================
@@ -17,8 +16,6 @@ package-lock.json
 .env.development.local
 .env.test.local
 .env.production.local
-
-# Solo mantén el ejemplo de variables
 !.env.example
 
 # ============================================================
@@ -56,8 +53,9 @@ build/
 # ============================================================
 # Test / Sonar / Reports
 # ============================================================
-/coverage
-/sonar-report
+coverage/
+sonar-report/
+.scannerwork/
 lcov.info
 
 # ============================================================
