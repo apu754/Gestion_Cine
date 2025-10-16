@@ -5,7 +5,7 @@ import { query, schema } from '../config/db.js';
 export async function authGuarda(req, res, next) {
   try {
     const auth = req.get('authorization') || '';
-    const m = auth.match(/^Bearer\s+(.+)$/i);
+    const m = auth.match(/^Bearer\s+([A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+)$/);
     if (!m) {
       return res.status(401).json({
         error: 'invalid token',
@@ -19,7 +19,7 @@ export async function authGuarda(req, res, next) {
       issuer: process.env.JWT_ISS || 'cinegestion.api',
     });
 
-    // 🔐 Verificar que la sesión exista y NO esté expirada
+    //Verificar que la sesión exista y NO esté expirada
     const { rows } = await query(
       `SELECT id FROM ${schema}.user_sessions
        WHERE jwt_id = $1 AND user_id = $2 AND expires_at > now()`,
@@ -34,6 +34,7 @@ export async function authGuarda(req, res, next) {
     }
 
     req.user = { id: payload.sub, role: payload.role, jti: payload.jti };
+
     next();
   } catch (e) {
     return res.status(401).json({ error: 'invalid token', details: e.message });

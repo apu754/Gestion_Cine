@@ -114,6 +114,14 @@ CREATE TABLE IF NOT EXISTS cinegestion.user_sessions (
 CREATE INDEX IF NOT EXISTS idx_sessions_user_expires
   ON cinegestion.user_sessions(user_id, expires_at);
 
+ALTER TABLE cinegestion.users
+  ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS verify_code_hash TEXT,
+  ADD COLUMN IF NOT EXISTS verify_expires_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS verify_attempts INT DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS resend_after TIMESTAMPTZ;
+CREATE INDEX IF NOT EXISTS idx_users_email_verified ON cinegestion.users(email_verified_at);
+
 
 -- =====================================================
 -- PELÍCULAS Y CONTENIDO

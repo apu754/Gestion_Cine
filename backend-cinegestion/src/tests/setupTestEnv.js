@@ -1,8 +1,8 @@
 // src/tests/setupTestEnv.js
 import 'dotenv/config';
 import { query, pool } from '../config/db.js';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const root = process.cwd();
 const TEST_SCHEMA = process.env.PGSCHEMA || 'cinegestion';
