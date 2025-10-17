@@ -10,6 +10,7 @@
     "test:int": "cross-env NODE_ENV=test PGSCHEMA=cinegestion TEST_LOAD_SCHEMA=1 NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
     "test:coverage": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --runInBand"
+    
   },
   "keywords": [],
   "author": "",

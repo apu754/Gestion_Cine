@@ -1,0 +1,22 @@
+{
+  "page": 1,
+  "total_pages": 30,
+  "total_results": 600,
+  "results": [
+    {
+      "id": 1039283,
+      "title": "Furiosa: A Mad Max Saga",
+      "original_title": "Furiosa: A Mad Max Saga",
+      "original_language": "en",
+      "overview": "En un mundo postapocalíptico, Furiosa lucha por sobrevivir y encontrar su camino de regreso a casa.",
+      "release_date": "2025-05-23",
+      "poster_path": "/furiosa.jpg",
+      "backdrop_path": "/furiosa-bg.jpg",
+      "popularity": 712.21,
+      "vote_average": 8.2,
+      "vote_count": 5541,
+      "genre_ids": [28, 12],
+      "adult": false
+    }
+  ]
+}

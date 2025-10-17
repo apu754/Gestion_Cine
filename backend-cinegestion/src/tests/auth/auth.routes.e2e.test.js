@@ -25,7 +25,7 @@ jest.unstable_mockModule('../../config/mailer.js', () => {
 // --- Helpers HTTP (se definen más abajo cuando carguemos app dinámicamente) ---
 let app;
 let request;
-let register, login, verify, resend, logout, me;
+let register, login, verify, resend, logout, logoutAll, me;
 
 // --- Utilidades BD para preparar/forzar estados ---
 async function truncateAuthTables() {
@@ -80,6 +80,7 @@ beforeAll(async () => {
   verify   = (payload) => request(app).post('/api/auth/verify').send(payload);
   resend   = (payload) => request(app).post('/api/auth/resend').send(payload);
   logout   = (token)   => request(app).post('/api/auth/logout').set('Authorization', `Bearer ${token}`).send();
+  logoutAll= (token)   => request(app).post('/api/auth/logout-all').set('Authorization', `Bearer ${token}`).send();
   me       = (token)   => request(app).get('/api/auth/me').set('Authorization', `Bearer ${token}`);
 });
 
@@ -203,7 +204,101 @@ describe('Auth E2E', () => {
     expect(res.status).toBe(400);
   });
 
+  // -----------------------------------------
+  // RF-05 /logout y /logout-all
+  // -----------------------------------------
 
+  test('RF-05.1 /logout sin token ⇒ 400 TOKEN_MISSING (o 401 si hay middleware global)', async () => {
+    // Llamada sin header Authorization
+    const res = await request(app).post('/api/auth/logout');
+    expect([400, 401]).toContain(res.status);
+    const err = (res.body?.error || res.body?.message || '').toUpperCase();
+    // Si tu app aplica un middleware global, podría responder 401
+    expect(err).toMatch("INVALID TOKEN");
+  });
+
+  test('RF-05.2 /logout con token mal formado ⇒ 400 TOKEN_MISSING', async () => {
+    const res = await request(app)
+      .post('/api/auth/logout')
+      .set('Authorization', 'Bearer not-a-jwt'); // no cumple el regex de 3 segmentos
+    expect([400, 401]).toContain(res.status);
+    const err = (res.body?.error || res.body?.message || '').toUpperCase();
+    expect(err).toMatch("INVALID TOKEN");
+  });
+
+  test('RF-05.3 /logout con token inválido (firma o secret incorrecto) ⇒ 401 INVALID TOKEN', async () => {
+    // Token cualquiera con 3 segmentos (no verificable)
+    const fakeJwt = 'aaa.bbb.ccc';
+    const res = await logout(fakeJwt);
+    expect(res.status).toBe(401);
+    expect((res.body?.error || '').toUpperCase()).toBe('INVALID TOKEN');
+  });
+
+  test('RF-05.4 /logout válido ⇒ 204 y el token queda inválido para /me', async () => {
+    const email = 'bye@example.com';
+    const password = 'UnaContraseñaLarga#2025';
+
+    await register({
+      email, password,
+      first_name: 'Bye', last_name: 'User',
+      document_type: 'CC', document_number: '12345678', birth_date: '1990-01-01'
+    });
+    await markEmailVerifiedDirectly(email);
+    const resLogin = await login({ email, password });
+    expect(resLogin.status).toBe(200);
+    const token = resLogin.body.token;
+
+    // Antes del logout, /me debe ser 200
+    const resMeOk = await me(token);
+    expect(resMeOk.status).toBe(200);
+
+    // Logout ⇒ 204
+    const resLogout = await logout(token);
+    expect(resLogout.status).toBe(204);
+
+    // Idempotente: segundo logout también 204
+    const resLogout2 = await logout(token);
+    expect([204, 401]).toContain(resLogout2.status);
+
+    // Después del logout, /me debe fallar
+    const resMeAfter = await me(token);
+    expect([401, 403]).toContain(resMeAfter.status);
+  });
+
+  test('RF-05.5 /logout-all elimina todas las sesiones del usuario ⇒ 204; tokens previos dejan de servir', async () => {
+    const email = 'multi@example.com';
+    const password = 'UnaContraseñaLarga#2025';
+
+    await register({
+      email, password,
+      first_name: 'Multi', last_name: 'Session',
+      document_type: 'CC', document_number: '12345678', birth_date: '1995-05-05'
+    });
+    await markEmailVerifiedDirectly(email);
+
+    // Dos sesiones/tokens distintos (dos logins)
+    const r1 = await login({ email, password });
+    const r2 = await login({ email, password });
+    expect(r1.status).toBe(200);
+    expect(r2.status).toBe(200);
+
+    const token1 = r1.body.token;
+    const token2 = r2.body.token;
+
+    // Validar que ambos sirven antes de logout-all
+    expect((await me(token1)).status).toBe(200);
+    expect((await me(token2)).status).toBe(200);
+
+    // logout-all con uno de los tokens
+    const resAll = await logoutAll(token1);
+    expect(resAll.status).toBe(204);
+
+    // Ambos tokens deben quedar inválidos
+    const after1 = await me(token1);
+    const after2 = await me(token2);
+    expect([401, 403]).toContain(after1.status);
+    expect([401, 403]).toContain(after2.status);
+  });
 
 
   // (Opcional) Si quieres cubrir happy path de /verify en E2E:

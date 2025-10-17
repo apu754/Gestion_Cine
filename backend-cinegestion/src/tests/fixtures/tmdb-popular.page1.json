@@ -1,0 +1,22 @@
+{
+  "page": 1,
+  "total_pages": 500,
+  "total_results": 10000,
+  "results": [
+    {
+      "id": 1038392,
+      "title": "Expediente Warren: El último rito",
+      "original_title": "The Conjuring: Last Rites",
+      "original_language": "en",
+      "overview": "Los investigadores de lo paranormal Ed y Lorraine Warren se enfrentan a un último caso aterrador en el que están implicadas entidades misteriosas a las que deben enfrentarse.",
+      "release_date": "2025-09-03",
+      "poster_path": "/qdoqogLNR6myoRrxYFxF4UTkFne.jpg",
+      "backdrop_path": "/9DYFYhmbXRGsMhfUgXM3VSP9uLX.jpg",
+      "popularity": 432.9578,
+      "vote_average": 6.954,
+      "vote_count": 974,
+      "genre_ids": [27],
+      "adult": false
+    }
+  ]
+}

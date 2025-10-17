@@ -1,0 +1,22 @@
+{
+  "page": 1,
+  "total_pages": 100,
+  "total_results": 2000,
+  "results": [
+    {
+      "id": 278,
+      "title": "Sueño de Fuga",
+      "original_title": "The Shawshank Redemption",
+      "original_language": "en",
+      "overview": "Un hombre inocente es encarcelado y encuentra la redención a través de un acto de humanidad dentro de los muros de la prisión.",
+      "release_date": "1994-09-23",
+      "poster_path": "/shawshank.jpg",
+      "backdrop_path": "/shawshank-bg.jpg",
+      "popularity": 250.3,
+      "vote_average": 8.7,
+      "vote_count": 25000,
+      "genre_ids": [18, 80],
+      "adult": false
+    }
+  ]
+}

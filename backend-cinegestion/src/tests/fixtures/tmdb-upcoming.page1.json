@@ -1,0 +1,22 @@
+{
+  "page": 1,
+  "total_pages": 20,
+  "total_results": 300,
+  "results": [
+    {
+      "id": 1040311,
+      "title": "El Reino del Planeta de los Simios",
+      "original_title": "Kingdom of the Planet of the Apes",
+      "original_language": "en",
+      "overview": "Varios años después del reinado de César, un joven simio inicia un viaje que definirá el futuro de su especie y el de los humanos.",
+      "release_date": "2025-12-10",
+      "poster_path": "/apes.jpg",
+      "backdrop_path": "/apes-bg.jpg",
+      "popularity": 534.6,
+      "vote_average": 7.8,
+      "vote_count": 1310,
+      "genre_ids": [878, 12],
+      "adult": false
+    }
+  ]
+}

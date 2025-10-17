@@ -6,9 +6,12 @@ export default {
 
   // Verbosidad en consola
   verbose: true,
+  // Limpia mocks entre tests
+  clearMocks: true,
 
   // Permite usar ES Modules sin transformadores
   transform: {},
+  
 
   // ---------- Cobertura ----------
   collectCoverage: true,
