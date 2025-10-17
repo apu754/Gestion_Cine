@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS cinegestion.users (
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
 
   -- Validaciones
-  CONSTRAINT email_format CHECK (email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$'),
+  CONSTRAINT email_format CHECK (email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$'),
   CONSTRAINT chk_birth_date_not_future CHECK (birth_date IS NULL OR birth_date <= CURRENT_DATE),
   -- Si uno de document_type/document_number viene, deben venir ambos
   CONSTRAINT chk_document_by_age
@@ -126,6 +126,40 @@ CREATE INDEX IF NOT EXISTS idx_users_email_verified ON cinegestion.users(email_v
 -- =====================================================
 -- PELÍCULAS Y CONTENIDO
 -- =====================================================
+
+CREATE TABLE IF NOT EXISTS cinegestion.external_titles (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  source        TEXT NOT NULL,              -- 'TMDB'
+  external_id   TEXT NOT NULL,
+  title         TEXT,
+  original_title TEXT,
+  original_language TEXT,
+  overview      TEXT,
+  release_date  DATE,
+  poster_url    TEXT,
+  backdrop_url  TEXT,
+  payload       JSONB NOT NULL,             -- TMDB completo o tu shape
+  last_synced_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (source, external_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_external_titles_src ON cinegestion.external_titles(source, external_id);
+
+SET search_path TO cinegestion, public;
+
+ALTER TABLE cinegestion.external_titles
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trg_external_titles_updated_at') THEN
+    CREATE TRIGGER trg_external_titles_updated_at
+    BEFORE UPDATE ON cinegestion.external_titles
+    FOR EACH ROW EXECUTE FUNCTION cinegestion.set_updated_at();
+  END IF;
+END $$;
+
 
 -- RF-03: Géneros de películas
 CREATE TABLE IF NOT EXISTS cinegestion.genres (

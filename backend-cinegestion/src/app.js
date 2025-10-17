@@ -5,6 +5,7 @@ import { security } from './common/security.js';
 import { errorHandler, notFound } from './common/http.js';
 import authRoutes from './modules/auth/auth.routes.js'
 import { corsMiddleware } from './common/cors.js';
+import movieRoutes from './modules/movies/movie.router.js';
 
 
 
@@ -31,6 +32,7 @@ app.use(
 
 // ---------- Rutas ----------
 app.use('/api/auth', authRoutes);
+app.use('/api/movies', movieRoutes);
 
 // ---------- Manejo de errores ----------
 
