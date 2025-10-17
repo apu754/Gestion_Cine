@@ -12,6 +12,30 @@ Permite:
 ---
 
 ## Estructura del Proyecto
+```
+gestion-cine/
+├── backend-cinegestion/
+│   ├── sql/
+│   │   ├── 00_schema_cinegestion.sql
+│   │   ├── 01_test_helpers.sql
+│   │   └── 02_seed_dev.sql
+│   ├── src/
+│   │   ├── common/
+│   │   ├── config/
+│   │   ├── middleware/
+│   │   ├── modules/
+│   │   ├── tests/
+│   │   ├── utils/
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── .gitignore
+│   ├── jest.config.mjs
+│   ├── package-lock.json
+│   ├── package.json
+│   └── sonar-project.properties
+├── .gitignore
+└── README.md
+```
 
 ## gestion-cine
 
