@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS cinegestion.users (
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
 
   -- Validaciones
-  CONSTRAINT email_format CHECK (email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$'),
+  CONSTRAINT email_format CHECK (email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$'),
   CONSTRAINT chk_birth_date_not_future CHECK (birth_date IS NULL OR birth_date <= CURRENT_DATE),
   -- Si uno de document_type/document_number viene, deben venir ambos
   CONSTRAINT chk_document_by_age
